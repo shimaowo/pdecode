@@ -35,11 +35,11 @@ fn main() -> std::io::Result<()> {
         let len = v.len();
         if len == 2 {
             let s = std::str::from_utf8(&v).expect("failed utf parse");
-            let num = match u8::from_str_radix(&s, 16) {
+            let num = match u8::from_str_radix(s, 16) {
                 Ok(val) => val,
                 Err(e) => panic!("failed hex parse {}", e),
             };
-            outfile.write(&num.to_le_bytes())?;
+            outfile.write_all(&num.to_le_bytes())?;
         } else {
             eprint!("Skipping parse of invalid chunk at offset {}: %", idx);
             for c in &v {
@@ -49,8 +49,8 @@ fn main() -> std::io::Result<()> {
 
             // just write out any invalid data verbatim
             let x: [u8; 1] = [b'%'];
-            outfile.write(&x)?;
-            outfile.write(&v)?;
+            outfile.write_all(&x)?;
+            outfile.write_all(&v)?;
         }
     }
 
